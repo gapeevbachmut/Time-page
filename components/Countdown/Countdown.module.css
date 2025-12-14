@@ -1,0 +1,30 @@
+.allTimeContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nowDate {
+    font-size: 16px;
+    margin: 8px;
+}
+
+.allTitle {
+    margin-bottom: 10px;
+}
+
+.dateBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dateName {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.line {
+    height: 2px;
+    width: 320px;
+}
