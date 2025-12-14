@@ -66,7 +66,7 @@ export default function Countdown() {
           <h3 className={css.allTitle}>Навчання</h3>
 
           <h4 className={css.allTitle}>IT School GoIT - Fullstack Developer</h4>
-          <ConvertTime ms={goItTime!} />
+          <ConvertTime ms={goItTime!} mode="date" />
         </div>
       </div>
       <hr className={css.line} />

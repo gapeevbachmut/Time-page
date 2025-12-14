@@ -41,20 +41,32 @@ import css from "./ConvertTime.module.css";
 
 type Props = {
   ms?: number | null;
+  mode?: "full" | "date" | "clock";
 };
 
-export default function ConvertTime({ ms }: Props) {
+export default function ConvertTime({ ms, mode = "full" }: Props) {
   if (ms == null) return <p>—</p>;
   const { years, days, hours, minutes, seconds } = convertMs(ms);
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
     <p className={css.timer}>
-      {years > 0 && `${years}р.`}
-      {days > 0 && `${days}д.`}
-      {hours > 0 && `${pad(hours)}г.`}
-      {minutes > 0 && `${pad(minutes)}хв.`}
-      {seconds > 0 && `${pad(seconds)}с.`}
+      {(mode === "full" || mode === "date") && years > 0 && `${years}р. `}
+      {(mode === "full" || mode === "date") && `${days}д. `}
+      {(mode === "full" || mode === "clock") && `${pad(hours)}г. `}
+      {(mode === "full" || mode === "clock") && `${pad(minutes)}хв. `}
+      {(mode === "full" || mode === "clock") && `${pad(seconds)}с.`}
     </p>
   );
+}
+//////////////////////////////////////
+//умовний рендеринг погано працює з перезодом часу через "00"
+{
+  /* <p className={css.timer}>
+  {years > 0 && `${years}р.`}
+  {days > 0 && `${days}д.`}
+  {hours > 0 && `${pad(hours)}г.`}
+  {minutes > 0 && `${pad(minutes)}хв.`}
+  {seconds > 0 && `${pad(seconds)}с.`}
+</p>; */
 }
