@@ -5,9 +5,24 @@ import Footer from "@/components/Footer/Footer";
 import css from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "Timer",
-  description: "My time",
+  title: "Сторінка часу",
+  description: "Час",
   icons: { icon: "/favicon.png" },
+  openGraph: {
+    title: "Сторінка часу",
+    description: "Час",
+    siteName: "Сторінка часу",
+    url: "https://time-page-nine.vercel.app/",
+    type: "website",
+    images: [
+      {
+        url: `https://res.cloudinary.com/dyounr2tf/image/upload/v1765806005/images_qc9cki.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Сторінка часу",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
