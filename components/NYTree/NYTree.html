@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>WIP</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Chicle&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            cursor: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+
+    <script type>//<script> <---- for restart button
+        (() => {
+
+            //change number from 1-3 for different effects
+            let color = 3;
+
+
+            //get the canvas and context
+            let canvas = document.getElementById("canvas")
+            let ctx = canvas.getContext('2d')
+
+            //set width and height of canvas
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let width = window.innerWidth
+
+            let height = window.innerHeight;
+
+            let mousex = 0,
+                mousey = 0;
+
+            window.addEventListener("mousemove", (e) => {
+                mousex = e.x;
+                mousey = e.y;
+            })
+
+            function dist(a, b, c, d) {
+                return Math.sqrt((a - c) * (a - c) + (b - d) * (b - d));
+            }
+
+            function lerp(x1, x2, x3) {
+                return (x2 - x1) * x3 + x1;
+            }
+
+            function random(min, max) {
+                return min + Math.random() * (max - min);
+            }
+
+            function ellipse(x, y, w, h) {
+                ctx.beginPath();
+                ctx.ellipse(x, y, w / 2, h / 2, 0, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.closePath();
+            };
+
+
+            let particles = [];
+
+            let dots = [];
+
+            class Particle {
+                constructor() {
+                    this.x = random(-50, (width + 50))
+
+                    this.y = -50;
+
+                    this.o = random(0.75, 0.85);
+
+                    this.xv = random(-3, -1)
+
+                    this.yv = random(1, 4)
+
+                    this.s = random(1, 3)
+
+                    this.dead = false;
+                }
+                draw() {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.o})`
+
+                    if (dist(this.x, this.y, mousex, mousey) <= 50) {
+                        ctx.fillStyle = `rgba(255, 255, 255, ${this.o * 0.9})`
+
+                        ctx.fillRect(this.x - 0.5, this.y - 0.5, this.s + 1, this.s + 1)
+                    }
+
+                    ctx.fillRect(this.x, this.y, this.s, this.s)
+
+                }
+
+                update() {
+
+                    this.y += this.yv;
+
+                    this.x += this.xv
+
+                    if (this.y >= height - 200) {
+                        this.o -= 0.01
+                    }
+
+                    if (this.y >= height) {
+                        this.dead = true;
+                    }
+
+                    if (this.x <= 0 - this.s) {
+
+                        this.x = width
+                    }
+
+                    this.draw()
+
+                }
+            }
+
+
+            class Dot {
+                constructor(y, r, ra) {
+                    this.x = width / 2 + Math.cos(r)
+                    this.y = y
+                    this.r = r;
+                    this.s = 2;
+                    this.ra = Math.max(ra, 0);
+                    this.R = random(100, 255);
+                    this.G = random(100, 255);
+                    this.xo = 0.0;
+                }
+                draw() {
+                    if (color === 2) {
+
+                        ctx.fillStyle = `rgba( ${this.R}, ${this.G}, 255, 1)`
+
+                    } else {
+                        ctx.fillStyle = "white"
+                    }
+
+                    ellipse(this.x + Math.cos(this.r) * this.ra, this.y, this.s, this.s)
+
+
+                    if (this.close) {
+
+                        if (color === 2 || color === 3) {
+
+                            //  this.xo = lerp(this.xo, 0.2, 0.1)
+
+
+                            ctx.fillStyle = `rgba( ${this.R}, ${this.G}, 255, 0.05)`
+
+
+                        } else if (color === 1) {
+                            ctx.fillStyle = `rgba(255, 255, 255, 0.05)`
+
+                        }
+
+                        ellipse(this.x + Math.cos(this.r) * this.ra, this.y, this.s * 7, this.s * 7)
+                    }
+
+                }
+                update() {
+
+                    if (dist(this.x + Math.cos(this.r) * this.ra, this.y, mousex, mousey) <= 60 + (this.ra / 20) + Math.sin(0) * (this.ra / 25) + 1) {
+                        this.close = true
+                    }
+
+
+                    this.s = (this.ra / 20) + Math.sin(this.r) * (this.ra / 25) + 1;
+
+                    this.r += 0.04;
+
+
+                    this.draw();
+
+                    this.close = false;
+
+                }
+            }
+
+            // dots.push(new Dot(200, 0.2, 100))
+
+
+
+            for (let i = 0; i < 250; i++) {
+                for (let j = 0; j < 10; j++) {
+
+                    dots.push(new Dot((height - 370) / 2 + 320 + random(0, 2) - i * 1.5, random(0, Math.PI * 2), 120 - i * 0.485))
+
+                }
+
+                dots.push(new Dot((height - 370) / 2 + 370 - i / 3, random(0, Math.PI * 2), 30))
+            }
+
+
+
+
+            function draw() {
+                ctx.fillStyle = "black"
+                ctx.fillRect(0, 0, width, height)
+
+
+                for (let i = 0; i < 20; i++) {
+                    particles.push(new Particle())
+                }
+
+                ctx.save();
+
+                //   ctx.filter = "blur(1px)"
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+
+                    if (particles[i].dead) {
+                        particles.splice(i, 1)
+                        i--;
+                    }
+                }
+
+                ctx.restore();
+
+                ctx.save();
+
+
+
+                for (let dot of dots) {
+                    dot.update();
+                }
+
+                ctx.restore();
+                dots.sort((a, b) => a.s - b.s);
+
+            }
+
+            window.setInterval(draw, 50);
+
+        })();
+    </script>
+
+
+</body>
+
+</html>
+<script>
+    /**
+    @about {
+        you can edit line 33 for fun ig lol
+    }
+    
+    @subscribe {
+        https://www.khanacademy.org/computer-programming/vicioustrexs-subpage-30/5318030875082752
+    }
+    
+
+    */
+</script>
