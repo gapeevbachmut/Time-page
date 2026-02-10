@@ -2,6 +2,7 @@ import Link from "next/link";
 import css from "./Footer.module.css";
 
 const Footer = () => {
+  const date = new Date().getFullYear();
   return (
     <footer className={css.footer}>
       <div className={css.content}>
@@ -15,7 +16,7 @@ const Footer = () => {
           </p>
         </div>
         {/* <p>© {new Date().getFullYear()} All rights reserved.</p> */}
-        <p>© 2025 - {new Date().getFullYear()} All rights reserved.</p>
+        <p>© 2025 - {date} All rights reserved.</p>
       </div>
     </footer>
   );

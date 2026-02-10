@@ -15,7 +15,7 @@ type TimeLeft = {
   seconds: number;
 };
 
-const NEW_YEAR_DATE = new Date("January 1, 2026 00:00:00");
+const NEW_YEAR_DATE = new Date("January 1, 2027 00:00:00");
 
 export default function TimerNewYear() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
